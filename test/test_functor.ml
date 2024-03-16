@@ -1,6 +1,6 @@
-open Typeclassopedia.Functor
+open Typeclassopedia
 
-module FunctorLaws (F : Functor) = struct
+module FunctorLaws (F : Functor.Functor) = struct
   open F
 
   let test_identity ?(eq = ( = )) x = eq (fmap (fun i -> i) x) x
@@ -11,7 +11,7 @@ module FunctorLaws (F : Functor) = struct
 end
 
 let test_functor_laws_maybe () =
-  let open FunctorLaws (Maybe) in
+  let open FunctorLaws (Maybe.Functor) in
   Alcotest.(check bool) "should pass identity law with Just" true (test_identity (Just 1));
   Alcotest.(check bool)
     "should pass indentity law with Nothing"
@@ -28,7 +28,7 @@ let test_functor_laws_maybe () =
 ;;
 
 let test_functor_laws_either () =
-  let open FunctorLaws (Either (String)) in
+  let open FunctorLaws (Either.Functor (String)) in
   Alcotest.(check bool)
     "should pass identity law with Left"
     true
@@ -48,7 +48,7 @@ let test_functor_laws_either () =
 ;;
 
 let test_functor_laws_pair () =
-  let open FunctorLaws (Pair) in
+  let open FunctorLaws (Pair.Functor) in
   Alcotest.(check bool) "should pass identity law" true (test_identity (Pair (1, 2)));
   Alcotest.(check bool)
     "should pass composition law"
@@ -57,7 +57,7 @@ let test_functor_laws_pair () =
 ;;
 
 let test_functor_laws_tuple_section () =
-  let open FunctorLaws (TupleSection (String)) in
+  let open FunctorLaws (Tuple_section.Functor (String)) in
   Alcotest.(check bool) "should pass identity law" true (test_identity ("1", 2));
   Alcotest.(check bool)
     "should pass composition law"
@@ -66,9 +66,9 @@ let test_functor_laws_tuple_section () =
 ;;
 
 let test_functor_laws_itree () =
-  let open FunctorLaws (ITree) in
+  let open FunctorLaws (Itree.Functor) in
   let rec eq t1 t2 =
-    let open Typeclassopedia.Type.ITree in
+    let open Itree.ITree in
     match t1, t2 with
     (* A bit hacky, to not generate id's for functions.*)
     | Leaf f, Leaf g -> f 10 = g 10

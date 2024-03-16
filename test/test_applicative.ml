@@ -1,7 +1,7 @@
-open Typeclassopedia.Applicative
+open Typeclassopedia
 open Typeclassopedia.Symb
 
-module ApplicativeLaws (A : Applicative) = struct
+module ApplicativeLaws (A : Applicative.Applicative) = struct
   open A
 
   let id x = x
@@ -12,7 +12,7 @@ module ApplicativeLaws (A : Applicative) = struct
 end
 
 let test_applicative_laws_maybe () =
-  let open ApplicativeLaws (Maybe) in
+  let open ApplicativeLaws (Maybe.Applicative) in
   Alcotest.(check bool) "should pass identity law with Just" true (test_identity (Just 1));
   Alcotest.(check bool)
     "should pass identity law with Nothing"
@@ -49,7 +49,7 @@ let test_applicative_laws_maybe () =
 ;;
 
 let test_applicative_laws_either () =
-  let open ApplicativeLaws (Either (String)) in
+  let open ApplicativeLaws (Either.Applicative (String)) in
   Alcotest.(check bool)
     "should pass identity law with Just"
     true
