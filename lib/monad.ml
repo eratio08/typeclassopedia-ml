@@ -7,6 +7,18 @@ module type Monad = sig
   (** Also known as [flatmap] or [bind]. Combines two computations into one bigger computation. *)
   val ( >>= ) : 'a 'b. 'a t -> ('a -> 'b t) -> 'b t
 
+  (** OCamls do-notation alternative.
+      {[
+        let () =
+          let* x = Just 2 in
+          Just x;
+          (* is equivalent of *)
+          Just 2 >>= fun x -> x
+        ;;
+      ]}
+      See {{:https://v2.ocaml.org/manual/bindingops.html} Binding Ops} for details. *)
+  val ( let* ) : 'a 'b. 'a t -> ('a -> 'b t) -> 'b t
+
   (** Is like [Applicative.( *> )]. Keeps the argument it pointing to. *)
   val ( >> ) : 'a 'b. 'a t -> 'b t -> 'b t
 
@@ -42,6 +54,7 @@ module MakeMonad (M : sig
   end) : Monad with type 'a t = 'a M.t = struct
   include M
 
+  let ( let* ) t f = t >>= f
   let return = pure
   let ( =<< ) f t : 'b t = t >>= f
   let ( >> ) t1 t2 = t1 >>= fun _ -> t2
@@ -64,4 +77,3 @@ module MakeMonad (M : sig
   let ( >=> ) f g x = f x >>= g
   let ( <=< ) g f = f >=> g
 end
-
