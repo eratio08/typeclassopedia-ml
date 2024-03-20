@@ -13,6 +13,7 @@ module type Semigroup = sig
   val s_times : int -> t -> t
 end
 
+(** The module applied to this functor also need to be a [Semigroup]. *)
 module MakeSemiGroup (S : sig
     type t
 
