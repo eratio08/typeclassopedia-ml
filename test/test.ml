@@ -5,5 +5,6 @@ let () =
     ; "Applicative", Test_applicative.suite
     ; "Monad", Test_monad.suite
     ; "Semigroup", Test_semigroup.suite
+    ; "Monoid", Test_monoid.suite
     ]
 ;;
