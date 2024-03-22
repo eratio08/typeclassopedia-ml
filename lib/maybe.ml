@@ -59,7 +59,7 @@ module Semigroup (T : sig
     let ( <> ) a b =
       match a, b with
       | Just a, Just b -> Just (a <> b)
-      | Just a, Nothing | Nothing, Just a -> Just a
+      | Just _, Nothing | Nothing, Just _ -> Nothing
       | _, _ -> Nothing
     ;;
   end)

@@ -5,6 +5,11 @@ struct
   type 'a t =
     | Left of E.t
     | Right of 'a
+
+  let pp pp_e pp_a fmt = function
+    | Left e -> Format.fprintf fmt "Left %a@." pp_e e
+    | Right a -> Format.fprintf fmt "Right %a@." pp_a a
+  ;;
 end
 
 module Functor (E : sig
@@ -54,5 +59,27 @@ module Monad (E : sig
       match t with
       | Right a -> f a
       | Left e -> Left e
+    ;;
+  end)
+
+module Semigroup (T : sig
+    type t
+
+    module E : sig
+      type t
+    end
+
+    val ( <> ) : t -> t -> t
+  end) : Semigroup.Semigroup with type t = T.t Either(T.E).t =
+Semigroup.MakeSemiGroup (struct
+    include T
+    include Either (T.E)
+
+    type t = T.t Either(T.E).t
+
+    let ( <> ) a b =
+      match a, b with
+      | Right a, Right b -> Right (a <> b)
+      | Right _, Left e | Left e, _ -> Left e
     ;;
   end)
